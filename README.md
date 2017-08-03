@@ -18,7 +18,7 @@ Thanks to all the contributors of the above libraries.
 
 ## Usage
 
-`yamldiff --yamlfile1 /path/to/yamlfile1.yml --yamlfile2 /path/to/yamlfile2.yml`
+`yamldiff --file1 /path/to/yamlfile1.yml --file2 /path/to/yamlfile2.yml`
 
 ## License
 

@@ -15,8 +15,8 @@ import (
 
 func main() {
 	var opts struct {
-		Yamlfile1 string `long:"yamlfile1" description:"first YAML file" required:"true"`
-		Yamlfile2 string `long:"yamlfile2" description:"second YAML file" required:"true"`
+		File1 string `long:"file1" description:"first YAML file" required:"true"`
+		File2 string `long:"file2" description:"second YAML file" required:"true"`
 	}
 
 	_, err := flags.Parse(&opts)
@@ -24,14 +24,14 @@ func main() {
 		os.Exit(1)
 	}
 
-	errors := stat(opts.Yamlfile1, opts.Yamlfile2)
+	errors := stat(opts.File1, opts.File2)
 	failOnErr(errors...)
 
-	yaml1, err := unmarshal(opts.Yamlfile1)
+	yaml1, err := unmarshal(opts.File1)
 	if err != nil {
 		failOnErr(err)
 	}
-	yaml2, err := unmarshal(opts.Yamlfile2)
+	yaml2, err := unmarshal(opts.File2)
 	if err != nil {
 		failOnErr(err)
 	}
