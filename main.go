@@ -38,7 +38,7 @@ func main() {
 
 	diff := computeDiff(yaml1, yaml2)
 	if diff != "" {
-		fmt.Printf("%v\n%v\n", aurora.Bold("diff"), diff)
+		fmt.Println(diff)
 	} else {
 		fmt.Println(aurora.Bold("no diff"))
 	}
