@@ -55,12 +55,12 @@ func stat(filenames ...string) []error {
 	return errs
 }
 
-func unmarshal(filename string) (map[interface{}]interface{}, error) {
+func unmarshal(filename string) (interface{}, error) {
 	contents, err := ioutil.ReadFile(filename)
 	if err != nil {
 		return nil, err
 	}
-	var ret map[interface{}]interface{}
+	var ret interface{}
 	yaml.Unmarshal(contents, &ret)
 	return ret, nil
 }
