@@ -20,15 +20,15 @@
   revision = "962a6974312dde57d1f6f5738b4f83e1af9f38a4"
 
 [[projects]]
-  branch = "master"
-  name = "golang.org/x/crypto"
-  packages = ["ssh/terminal"]
-  revision = "42ff06aea7c329876e5a0fe94acc96902accf0ad"
+  name = "github.com/mattn/go-isatty"
+  packages = ["."]
+  revision = "fc9e8d8ef48496124e79ae0df75490096eccf6fe"
+  version = "v0.0.2"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/sys"
-  packages = ["unix","windows"]
+  packages = ["unix"]
   revision = "d8f5ea21b9295e315e612b4bcf4bedea93454d4d"
 
 [[projects]]
@@ -40,6 +40,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "5cb5c8c2dbbc3b56590e44430bbfa1cd70b6e59271c6ac41130640e417c3a9dc"
+  inputs-digest = "79125d185da82fe3858e0f8b9e8c4ce4e1011c4937801f8fa838faec37c0d2df"
   solver-name = "gps-cdcl"
   solver-version = 1

@@ -11,9 +11,10 @@
   name = "github.com/logrusorgru/aurora"
 
 [[constraint]]
-  branch = "master"
-  name = "golang.org/x/crypto"
-
-[[constraint]]
   branch = "v2"
   name = "gopkg.in/yaml.v2"
+
+[[constraint]]
+  version = "v0.0.2"
+  name = "github.com/mattn/go-isatty"
+

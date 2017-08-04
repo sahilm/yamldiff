@@ -9,7 +9,8 @@ PKGS=$$(go list ./... | grep -v /vendor)
 VERSION=$$(cat VERSION)
 ALL_OS=\
 	darwin \
-	linux
+	linux \
+	windows
 
 .PHONY: all
 all: lint test

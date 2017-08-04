@@ -7,12 +7,10 @@ import (
 
 	"strings"
 
-	"syscall"
-
 	"github.com/jessevdk/go-flags"
 	"github.com/kylelemons/godebug/pretty"
 	"github.com/logrusorgru/aurora"
-	"golang.org/x/crypto/ssh/terminal"
+	"github.com/mattn/go-isatty"
 	"gopkg.in/yaml.v2"
 )
 
@@ -109,10 +107,22 @@ func computeDiff(formatter aurora.Aurora, a interface{}, b interface{}) string {
 
 func newFormatter(noColor bool) aurora.Aurora {
 	var formatter aurora.Aurora
-	if noColor || !terminal.IsTerminal(syscall.Stdout) {
+	if noColor || !isTerminal() {
 		formatter = aurora.NewAurora(false)
 	} else {
 		formatter = aurora.NewAurora(true)
 	}
 	return formatter
+}
+
+func isTerminal() bool {
+	fd := os.Stdout.Fd()
+	switch {
+	case isatty.IsTerminal(fd):
+		return true
+	case isatty.IsCygwinTerminal(fd):
+		return true
+	default:
+		return false
+	}
 }
