@@ -2,12 +2,14 @@ EXTERNAL_TOOLS=\
 	golang.org/x/tools/cmd/goimports \
 	github.com/alecthomas/gometalinter \
 	github.com/golang/dep/cmd/dep
-
 COVERAGE_DIR=coverage
 COVER_PROFILE=$(COVERAGE_DIR)/cover.out
 TMP_COVER_PROFILE=$(COVERAGE_DIR)/cover.tmp
-
 PKGS=$$(go list ./... | grep -v /vendor)
+VERSION=$$(cat VERSION)
+ALL_OS=\
+	darwin \
+	linux
 
 .PHONY: all
 all: lint test
@@ -67,3 +69,11 @@ depensure:
 .PHONY: depupdate
 depupdate:
 	@dep ensure -update
+
+.PHONY: buildrelease
+buildrelease:
+	@rm -rf release
+	@mkdir release
+	@for os in $(ALL_OS); do \
+		GOOS=$$os GOARCH=amd64 go build -ldflags="-X main.version=$(VERSION)" -o release/yamldiff-v$(VERSION)-$$os-amd64 || exit 1; \
+	done

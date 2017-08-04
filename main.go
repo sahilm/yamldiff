@@ -16,6 +16,8 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+var version = "latest"
+
 func main() {
 	var opts struct {
 		File1   string `long:"file1" description:"first YAML file" required:"true"`
@@ -23,8 +25,6 @@ func main() {
 		NoColor bool   `long:"no-color" description:"disable colored output" required:"false"`
 		Version func() `long:"version" description:"print version and exit"`
 	}
-
-	var version = "latest"
 
 	opts.Version = func() {
 		fmt.Fprintf(os.Stderr, "%v\n", version)
