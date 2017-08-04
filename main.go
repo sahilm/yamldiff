@@ -78,18 +78,14 @@ func failOnErr(colorizer aurora.Aurora, errs ...error) {
 }
 
 func computeDiff(colorizer aurora.Aurora, a interface{}, b interface{}) string {
-	var stringers []fmt.Stringer
+	diffs := make([]string, 0)
 	for _, s := range strings.Split(pretty.Compare(a, b), "\n") {
 		switch {
 		case strings.HasPrefix(s, "+"):
-			stringers = append(stringers, colorizer.Bold(colorizer.Green(s)))
+			diffs = append(diffs, colorizer.Bold(colorizer.Green(s)).String())
 		case strings.HasPrefix(s, "-"):
-			stringers = append(stringers, colorizer.Bold(colorizer.Red(s)))
+			diffs = append(diffs, colorizer.Bold(colorizer.Red(s)).String())
 		}
 	}
-	var s []string
-	for _, stringer := range stringers {
-		s = append(s, stringer.String())
-	}
-	return strings.Join(s, "\n")
+	return strings.Join(diffs, "\n")
 }
