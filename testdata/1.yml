@@ -1,0 +1,6 @@
+---
+foo: bar
+something:
+  - is: 1
+  - hello: world
+stuff: 200

@@ -7,9 +7,12 @@ import (
 
 	"strings"
 
+	"syscall"
+
 	"github.com/jessevdk/go-flags"
 	"github.com/kylelemons/godebug/pretty"
 	"github.com/logrusorgru/aurora"
+	"golang.org/x/crypto/ssh/terminal"
 	"gopkg.in/yaml.v2"
 )
 
@@ -25,21 +28,21 @@ func main() {
 		os.Exit(1)
 	}
 
-	colorizer := aurora.NewAurora(!opts.NoColor)
+	formatter := newFormatter(opts.NoColor)
 
 	errors := stat(opts.File1, opts.File2)
-	failOnErr(colorizer, errors...)
+	failOnErr(formatter, errors...)
 
 	yaml1, err := unmarshal(opts.File1)
 	if err != nil {
-		failOnErr(colorizer, err)
+		failOnErr(formatter, err)
 	}
 	yaml2, err := unmarshal(opts.File2)
 	if err != nil {
-		failOnErr(colorizer, err)
+		failOnErr(formatter, err)
 	}
 
-	diff := computeDiff(colorizer, yaml1, yaml2)
+	diff := computeDiff(formatter, yaml1, yaml2)
 	if diff != "" {
 		fmt.Println(diff)
 	}
@@ -66,26 +69,36 @@ func unmarshal(filename string) (interface{}, error) {
 	return ret, nil
 }
 
-func failOnErr(colorizer aurora.Aurora, errs ...error) {
+func failOnErr(formatter aurora.Aurora, errs ...error) {
 	if len(errs) > 0 {
 		var errMessages []string
 		for _, err := range errs {
 			errMessages = append(errMessages, err.Error())
 		}
-		fmt.Fprintf(os.Stderr, "%v\n\n", colorizer.Red(strings.Join(errMessages, "\n")))
+		fmt.Fprintf(os.Stderr, "%v\n\n", formatter.Red(strings.Join(errMessages, "\n")))
 		os.Exit(1)
 	}
 }
 
-func computeDiff(colorizer aurora.Aurora, a interface{}, b interface{}) string {
+func computeDiff(formatter aurora.Aurora, a interface{}, b interface{}) string {
 	diffs := make([]string, 0)
 	for _, s := range strings.Split(pretty.Compare(a, b), "\n") {
 		switch {
 		case strings.HasPrefix(s, "+"):
-			diffs = append(diffs, colorizer.Bold(colorizer.Green(s)).String())
+			diffs = append(diffs, formatter.Bold(formatter.Green(s)).String())
 		case strings.HasPrefix(s, "-"):
-			diffs = append(diffs, colorizer.Bold(colorizer.Red(s)).String())
+			diffs = append(diffs, formatter.Bold(formatter.Red(s)).String())
 		}
 	}
 	return strings.Join(diffs, "\n")
+}
+
+func newFormatter(noColor bool) aurora.Aurora {
+	var formatter aurora.Aurora
+	if noColor || !terminal.IsTerminal(syscall.Stdout) {
+		formatter = aurora.NewAurora(false)
+	} else {
+		formatter = aurora.NewAurora(true)
+	}
+	return formatter
 }
