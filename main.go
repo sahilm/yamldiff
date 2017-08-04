@@ -65,7 +65,10 @@ func unmarshal(filename string) (interface{}, error) {
 		return nil, err
 	}
 	var ret interface{}
-	yaml.Unmarshal(contents, &ret)
+	err = yaml.Unmarshal(contents, &ret)
+	if err != nil {
+		return nil, err
+	}
 	return ret, nil
 }
 

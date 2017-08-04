@@ -51,13 +51,13 @@ func runYamldiff(t *testing.T) []byte {
 	done := make(chan bool)
 	go func() {
 		err = yamldiff.Wait()
-		if err != nil {
-			t.Fatal(err)
-		}
 		done <- true
 	}()
 	select {
 	case <-done:
+		if err != nil {
+			t.Fatal(err)
+		}
 	case <-time.After(time.Millisecond * 500):
 		t.Fatal("timed out after 500ms")
 	}
