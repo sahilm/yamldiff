@@ -8,6 +8,7 @@ Nothing fancy about the code, all the heavy liftin' is done by:
 * [go-yaml](https://github.com/go-yaml/yaml/) - for YAML parsin'
 * [godebug](https://github.com/kylelemons/godebug/) - for diffin'
 * [aurora](https://github.com/logrusorgru/aurora) - for fancy printin'
+* [go-isatty](https://github.com/mattn/go-isatty) - for tty detectin'
 * [go-flags](https://github.com/jessevdk/go-flags) - for flaggin'
 * [The Go stdlib](https://golang.org/pkg/) - for everythin'
 
@@ -15,11 +16,23 @@ Thanks to all the contributors of the above libraries.
 
 ## Installation
 
-`go get -u github.com/sahilm/yamldiff`
+* Download a variant of `yamldiff-v$VERSION-{darwin,linux,windows}-amd64` from the [releases](https://github.com/sahilm/yamldiff/releases) page.
+* Rename to downloaded file to something sane like `yamldiff` :)
+* Mark the file as an executable. On *nix, `chmod +x yamldiff`.
+* Put it on your `$PATH`.
 
 ## Usage
 
-`yamldiff --file1 /path/to/yamlfile1.yml --file2 /path/to/yamlfile2.yml`
+`yamldiff --file1 /path/to/yamlfile1.yml --file2 /path/to/yamlfile2.yml`. The output is colorized by default. Colors
+can be suppressed by the `--no-color` flag. Colors will automatically be suppressed if `stdout` is not a `tty`, for example
+when piping/redirecting the output of `yamldiff`.
+
+## Contributing
+
+* Pull the code: `go get -u github.com/sahilm/yamldiff`.
+* Hack away!
+* Send a pull request.
+* Have fun.
 
 ## License
 
