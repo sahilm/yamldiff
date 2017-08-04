@@ -6,7 +6,7 @@ COVERAGE_DIR=coverage
 COVER_PROFILE=$(COVERAGE_DIR)/cover.out
 TMP_COVER_PROFILE=$(COVERAGE_DIR)/cover.tmp
 PKGS=$$(go list ./... | grep -v /vendor)
-VERSION=$$(cat VERSION)
+VERSION?=latest
 ALL_OS=\
 	darwin \
 	linux \
