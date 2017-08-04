@@ -1,0 +1,19 @@
+[[constraint]]
+  name = "github.com/jessevdk/go-flags"
+  version = "1.3.0"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/kylelemons/godebug"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/logrusorgru/aurora"
+
+[[constraint]]
+  branch = "master"
+  name = "golang.org/x/crypto"
+
+[[constraint]]
+  branch = "v2"
+  name = "gopkg.in/yaml.v2"
