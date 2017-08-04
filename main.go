@@ -15,8 +15,9 @@ import (
 
 func main() {
 	var opts struct {
-		File1 string `long:"file1" description:"first YAML file" required:"true"`
-		File2 string `long:"file2" description:"second YAML file" required:"true"`
+		File1   string `long:"file1" description:"first YAML file" required:"true"`
+		File2   string `long:"file2" description:"second YAML file" required:"true"`
+		NoColor bool   `long:"no-color" description:"disable colored output" required:"false"`
 	}
 
 	_, err := flags.Parse(&opts)
@@ -24,23 +25,25 @@ func main() {
 		os.Exit(1)
 	}
 
+	colorizer := aurora.NewAurora(!opts.NoColor)
+
 	errors := stat(opts.File1, opts.File2)
-	failOnErr(errors...)
+	failOnErr(colorizer, errors...)
 
 	yaml1, err := unmarshal(opts.File1)
 	if err != nil {
-		failOnErr(err)
+		failOnErr(colorizer, err)
 	}
 	yaml2, err := unmarshal(opts.File2)
 	if err != nil {
-		failOnErr(err)
+		failOnErr(colorizer, err)
 	}
 
-	diff := computeDiff(yaml1, yaml2)
+	diff := computeDiff(colorizer, yaml1, yaml2)
 	if diff != "" {
 		fmt.Println(diff)
 	} else {
-		fmt.Println(aurora.Bold("no diff"))
+		fmt.Println(colorizer.Bold("no diff"))
 	}
 }
 
@@ -65,25 +68,25 @@ func unmarshal(filename string) (interface{}, error) {
 	return ret, nil
 }
 
-func failOnErr(errs ...error) {
+func failOnErr(colorizer aurora.Aurora, errs ...error) {
 	if len(errs) > 0 {
 		var errMessages []string
 		for _, err := range errs {
 			errMessages = append(errMessages, err.Error())
 		}
-		fmt.Fprintf(os.Stderr, "%v\n\n", aurora.Red(strings.Join(errMessages, "\n")))
+		fmt.Fprintf(os.Stderr, "%v\n\n", colorizer.Red(strings.Join(errMessages, "\n")))
 		os.Exit(1)
 	}
 }
 
-func computeDiff(a interface{}, b interface{}) string {
+func computeDiff(colorizer aurora.Aurora, a interface{}, b interface{}) string {
 	var stringers []fmt.Stringer
 	for _, s := range strings.Split(pretty.Compare(a, b), "\n") {
 		switch {
 		case strings.HasPrefix(s, "+"):
-			stringers = append(stringers, aurora.Bold(aurora.Green(s)))
+			stringers = append(stringers, colorizer.Bold(colorizer.Green(s)))
 		case strings.HasPrefix(s, "-"):
-			stringers = append(stringers, aurora.Bold(aurora.Red(s)))
+			stringers = append(stringers, colorizer.Bold(colorizer.Red(s)))
 		}
 	}
 	var s []string
