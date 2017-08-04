@@ -4,4 +4,4 @@ go:
 install:
   - make bootstrap
 script:
-  - make
+  - make ci
