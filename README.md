@@ -1,4 +1,5 @@
 # yamldiff
+[![Build Status](https://travis-ci.org/sahilm/yamldiff.svg?branch=master)](https://travis-ci.org/sahilm/yamldiff)
 
 A CLI tool to diff two YAML/JSON files.
 
