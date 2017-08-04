@@ -42,8 +42,6 @@ func main() {
 	diff := computeDiff(colorizer, yaml1, yaml2)
 	if diff != "" {
 		fmt.Println(diff)
-	} else {
-		fmt.Println(colorizer.Bold("no diff"))
 	}
 }
 
