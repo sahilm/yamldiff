@@ -82,14 +82,15 @@ func unmarshal(filename string) (interface{}, error) {
 }
 
 func failOnErr(formatter aurora.Aurora, errs ...error) {
-	if len(errs) > 0 {
-		var errMessages []string
-		for _, err := range errs {
-			errMessages = append(errMessages, err.Error())
-		}
-		fmt.Fprintf(os.Stderr, "%v\n\n", formatter.Red(strings.Join(errMessages, "\n")))
-		os.Exit(1)
+	if len(errs) == 0 {
+		return
 	}
+	var errMessages []string
+	for _, err := range errs {
+		errMessages = append(errMessages, err.Error())
+	}
+	fmt.Fprintf(os.Stderr, "%v\n\n", formatter.Red(strings.Join(errMessages, "\n")))
+	os.Exit(1)
 }
 
 func computeDiff(formatter aurora.Aurora, a interface{}, b interface{}) string {
