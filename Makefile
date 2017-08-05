@@ -21,13 +21,13 @@ test:
 
 .PHONY: lint
 lint:
-	@gometalinter --enable=goimports --enable=gosimple \
-	--enable=unparam --enable=unused --vendor
+	@gometalinter ./... --enable=goimports --enable=gosimple \
+	--enable=unparam --enable=unused --vendor -t
 
 .PHONY: check
 check:
-	@gometalinter --disable-all --enable=vet --enable=vetshadow \
-	--enable=errcheck --enable=goimports --vendor
+	@gometalinter ./... --disable-all --enable=vet --enable=vetshadow \
+	--enable=errcheck --enable=goimports --vendor -t
 
 .PHONY: bootstrap
 bootstrap:
