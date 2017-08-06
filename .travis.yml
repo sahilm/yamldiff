@@ -1,4 +1,7 @@
 language: go
+cache:
+  directories:
+  - vendor
 go:
   - 1.8
 install:
