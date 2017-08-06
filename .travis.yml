@@ -2,6 +2,7 @@ language: go
 cache:
   directories:
   - vendor
+  - $GOPATH/src
 go:
   - 1.8
 install:
