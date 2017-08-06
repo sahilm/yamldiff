@@ -1,5 +1,6 @@
 # yamldiff
-[![Build Status](https://travis-ci.org/sahilm/yamldiff.svg?branch=master)](https://travis-ci.org/sahilm/yamldiff)
+[![darwin/linux build status](https://travis-ci.org/sahilm/yamldiff.svg?branch=master)](https://travis-ci.org/sahilm/yamldiff)
+[![windows build status](https://ci.appveyor.com/api/projects/status/kf8f41a0s739hke7?svg=true)](https://ci.appveyor.com/project/sahilm/yamldiff)
 [![Go Report Card](https://goreportcard.com/badge/github.com/sahilm/yamldiff)](https://goreportcard.com/report/github.com/sahilm/yamldiff)
 
 A CLI tool to diff two YAML/JSON files.
