@@ -1,0 +1,14 @@
+platform: x64
+
+clone_folder: c:\gopath\src\github.com\sahilm\yamldiff
+
+environment:
+  GOPATH: c:\gopath
+
+install:
+  - echo %PATH%
+  - echo %GOPATH%
+  - set PATH=%GOPATH%\bin;c:\go\bin;%PATH%
+  - go version
+  - go env
+  - make bootstrap
