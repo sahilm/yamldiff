@@ -1,8 +1,5 @@
 platform: x64
 clone_folder: c:\gopath\src\github.com\sahilm\yamldiff
-cache:
-  - vendor
-  - '%GOPATH%\src'
 environment:
   GOPATH: c:\gopath
 install:
