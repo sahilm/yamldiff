@@ -6,9 +6,7 @@ environment:
   GOPATH: c:\gopath
 
 install:
-  - echo %PATH%
-  - echo %GOPATH%
   - set PATH=%GOPATH%\bin;c:\go\bin;%PATH%
   - go version
   - go env
-  - make bootstrap
+  - dir c:\cygwin64\bin
