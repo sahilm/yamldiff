@@ -1,15 +1,13 @@
 platform: x64
-
 clone_folder: c:\gopath\src\github.com\sahilm\yamldiff
-
+cache:
+  - vendor
 environment:
   GOPATH: c:\gopath
-
 install:
   - set PATH=%GOPATH%\bin;c:\go\bin;%c:\cygwin64\bin;%PATH%
   - go version
   - go env
   - make bootstrap
-
 build_script:
   - make ci
