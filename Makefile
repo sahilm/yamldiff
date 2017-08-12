@@ -45,19 +45,6 @@ install: setup
 build: setup
 	@go build $(PKGS)
 
-VERSION?=latest
-ALL_OS=\
-	darwin \
-	linux \
-	windows
-.PHONY: buildrelease
-buildrelease:
-	@rm -rf release
-	@mkdir release
-	@for os in $(ALL_OS); do \
-		GOOS=$$os GOARCH=amd64 go build -ldflags="-X main.version=$(VERSION)" -o release/yamldiff-v$(VERSION)-$$os-amd64 || exit 1; \
-	done
-
 BIN_DIR := $(GOPATH)/bin
 GOIMPORTS := $(BIN_DIR)/goimports
 GOMETALINTER := $(BIN_DIR)/gometalinter
@@ -80,3 +67,20 @@ $(VENDOR): $(DEP)
 	@dep ensure
 
 setup: tools $(VENDOR)
+
+BINARY := yamldiff
+VERSION ?= latest
+PLATFORMS := darwin/amd64 linux/amd64 windows/amd64
+
+temp = $(subst /, ,$@)
+os = $(word 1, $(temp))
+arch = $(word 2, $(temp))
+
+.PHONY: $(PLATFORMS)
+$(PLATFORMS): setup
+	@mkdir -p $(CURDIR)/release
+	GOOS=$(os) GOARCH=$(arch) go build -ldflags="-X main.version=$(VERSION)" \
+	-o release/$(BINARY)-v$(VERSION)-$(os)-$(arch)
+
+.PHONY: release
+release: $(PLATFORMS)
