@@ -6,6 +6,5 @@ install:
   - set PATH=%GOPATH%\bin;c:\go\bin;%c:\cygwin64\bin;%PATH%
   - go version
   - go env
-  - make bootstrap
 build_script:
   - make ci
