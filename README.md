@@ -19,7 +19,7 @@ Thanks to all the contributors of the above libraries.
 ## Installation
 
 * Download a variant of `yamldiff-v$VERSION-{darwin,linux,windows}-amd64` from the [releases](https://github.com/sahilm/yamldiff/releases) page.
-* Rename to downloaded file to something sane like `yamldiff` :)
+* Rename the downloaded file to something sane like `yamldiff` :)
 * Mark the file as an executable. On *nix, `chmod +x yamldiff`.
 * Put it on your `$PATH`.
 
