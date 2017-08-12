@@ -19,7 +19,8 @@ check: setup
 COVERAGE := $(CURDIR)/coverage
 COVER_PROFILE :=$(COVERAGE)/cover.out
 TMP_COVER_PROFILE :=$(COVERAGE)/cover.tmp
-$(COVERAGE): setup
+.PHONY: cover
+cover: setup
 	@rm -rf $(COVERAGE)
 	@mkdir -p $(COVERAGE)
 	@echo "mode: set" > $(COVER_PROFILE)
@@ -31,8 +32,6 @@ $(COVERAGE): setup
 		fi; \
 	done
 	@go tool cover -html=$(COVER_PROFILE) -o $(COVERAGE)/index.html
-
-cover: $(COVERAGE)
 
 .PHONY: ci
 ci: setup check test
