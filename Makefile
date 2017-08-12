@@ -7,26 +7,21 @@ ALL_OS=\
 	darwin \
 	linux \
 	windows
-BIN_DIR := $(GOPATH)/bin
-GOIMPORTS := $(BIN_DIR)/goimports
-GOMETALINTER := $(BIN_DIR)/gometalinter
-DEP := $(BIN_DIR)/dep
-VENDOR := $(CURDIR)/vendor
 
 .PHONY: all
-all: $(SETUP) lint test
+all: setup lint test
 
 .PHONY: test
-test: $(SETUP)
+test: setup
 	@go test $(PKGS)
 
 .PHONY: lint
-lint: $(SETUP)
+lint: setup
 	@gometalinter ./... --enable=goimports --enable=gosimple \
 	--enable=unparam --enable=unused --vendor -t
 
 .PHONY: check
-check: $(SETUP)
+check: setup
 	@gometalinter ./... --disable-all --enable=vet --enable=vetshadow \
 	--enable=errcheck --enable=goimports --vendor -t
 
@@ -45,14 +40,14 @@ cover:
 	@go tool cover -html=$(COVER_PROFILE) -o $(COVERAGE_DIR)/index.html
 
 .PHONY: ci
-ci: $(SETUP) check test
+ci: setup check test
 
 .PHONY: install
-install: $(SETUP)
+install: setup
 	@go install $(PKGS)
 
 .PHONY: build
-build: $(SETUP)
+build: setup
 	@go build $(PKGS)
 
 .PHONY: buildrelease
@@ -62,6 +57,12 @@ buildrelease:
 	@for os in $(ALL_OS); do \
 		GOOS=$$os GOARCH=amd64 go build -ldflags="-X main.version=$(VERSION)" -o release/yamldiff-v$(VERSION)-$$os-amd64 || exit 1; \
 	done
+
+BIN_DIR := $(GOPATH)/bin
+GOIMPORTS := $(BIN_DIR)/goimports
+GOMETALINTER := $(BIN_DIR)/gometalinter
+DEP := $(BIN_DIR)/dep
+VENDOR := $(CURDIR)/vendor
 
 $(GOIMPORTS):
 	@go get -u golang.org/x/tools/cmd/goimports
@@ -73,9 +74,9 @@ $(GOMETALINTER):
 $(DEP):
 	@go get -u github.com/golang/dep/cmd/dep
 
-$(TOOLS): $(GOIMPORTS) $(GOMETALINTER) $(DEP)
+tools: $(GOIMPORTS) $(GOMETALINTER) $(DEP)
 
 $(VENDOR): $(DEP)
 	@dep ensure
 
-$(SETUP): $(TOOLS) $(VENDOR)
+setup: tools $(VENDOR)
