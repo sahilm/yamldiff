@@ -4,7 +4,7 @@ go:
 script:
   - make ci
 before_deploy:
-  - make VERSION=${TRAVIS_TAG} buildrelease
+  - make VERSION=${TRAVIS_TAG} release
 deploy:
   provider: releases
   api_key:
