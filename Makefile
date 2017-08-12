@@ -1,16 +1,7 @@
-COVERAGE_DIR=coverage
-COVER_PROFILE=$(COVERAGE_DIR)/cover.out
-TMP_COVER_PROFILE=$(COVERAGE_DIR)/cover.tmp
-PKGS=$$(go list ./... | grep -v /vendor)
-VERSION?=latest
-ALL_OS=\
-	darwin \
-	linux \
-	windows
-
 .PHONY: all
 all: setup lint test
 
+PKGS := $(shell go list ./... | grep -v /vendor)
 .PHONY: test
 test: setup
 	@go test $(PKGS)
@@ -25,10 +16,12 @@ check: setup
 	@gometalinter ./... --disable-all --enable=vet --enable=vetshadow \
 	--enable=errcheck --enable=goimports --vendor -t
 
-.PHONY: cover
-cover:
-	@rm -rf $(COVERAGE_DIR)
-	@mkdir -p $(COVERAGE_DIR)
+COVERAGE := $(CURDIR)/coverage
+COVER_PROFILE :=$(COVERAGE)/cover.out
+TMP_COVER_PROFILE :=$(COVERAGE)/cover.tmp
+$(COVERAGE): setup
+	@rm -rf $(COVERAGE)
+	@mkdir -p $(COVERAGE)
 	@echo "mode: set" > $(COVER_PROFILE)
 	@for pkg in $(PKGS); do \
 		go test -v -coverprofile=$(TMP_COVER_PROFILE) $$pkg; \
@@ -37,7 +30,9 @@ cover:
 			rm $(TMP_COVER_PROFILE); \
 		fi; \
 	done
-	@go tool cover -html=$(COVER_PROFILE) -o $(COVERAGE_DIR)/index.html
+	@go tool cover -html=$(COVER_PROFILE) -o $(COVERAGE)/index.html
+
+cover: $(COVERAGE)
 
 .PHONY: ci
 ci: setup check test
@@ -50,6 +45,11 @@ install: setup
 build: setup
 	@go build $(PKGS)
 
+VERSION?=latest
+ALL_OS=\
+	darwin \
+	linux \
+	windows
 .PHONY: buildrelease
 buildrelease:
 	@rm -rf release
