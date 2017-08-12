@@ -6,10 +6,10 @@ PKGS := $(shell go list ./... | grep -v /vendor)
 test: setup
 	@go test $(PKGS)
 
-SOURCES = $(shell find . -name '*.go' -not -path './vendor/*')
+sources = $(shell find . -name '*.go' -not -path './vendor/*')
 .PHONY: goimports
 goimports: setup
-	@goimports -w $(SOURCES)
+	@goimports -w $(sources)
 
 .PHONY: lint
 lint: setup
