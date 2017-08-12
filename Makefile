@@ -1,7 +1,3 @@
-EXTERNAL_TOOLS=\
-	golang.org/x/tools/cmd/goimports \
-	github.com/alecthomas/gometalinter \
-	github.com/golang/dep/cmd/dep
 COVERAGE_DIR=coverage
 COVER_PROFILE=$(COVERAGE_DIR)/cover.out
 TMP_COVER_PROFILE=$(COVERAGE_DIR)/cover.tmp
@@ -11,32 +7,28 @@ ALL_OS=\
 	darwin \
 	linux \
 	windows
+BIN_DIR := $(GOPATH)/bin
+GOIMPORTS := $(BIN_DIR)/goimports
+GOMETALINTER := $(BIN_DIR)/gometalinter
+DEP := $(BIN_DIR)/dep
+VENDOR := $(CURDIR)/vendor
 
 .PHONY: all
-all: lint test
+all: $(SETUP) lint test
 
 .PHONY: test
-test:
+test: $(SETUP)
 	@go test $(PKGS)
 
 .PHONY: lint
-lint:
+lint: $(SETUP)
 	@gometalinter ./... --enable=goimports --enable=gosimple \
 	--enable=unparam --enable=unused --vendor -t
 
 .PHONY: check
-check:
+check: $(SETUP)
 	@gometalinter ./... --disable-all --enable=vet --enable=vetshadow \
 	--enable=errcheck --enable=goimports --vendor -t
-
-.PHONY: bootstrap
-bootstrap:
-	@for tool in  $(EXTERNAL_TOOLS) ; do \
-    	echo "Installing/Updating $$tool" ; \
-    	go get -u $$tool; \
-    done
-	@dep ensure
-	@gometalinter --install
 
 .PHONY: cover
 cover:
@@ -53,23 +45,15 @@ cover:
 	@go tool cover -html=$(COVER_PROFILE) -o $(COVERAGE_DIR)/index.html
 
 .PHONY: ci
-ci: depensure check test
+ci: $(SETUP) check test
 
 .PHONY: install
-install:
+install: $(SETUP)
 	@go install $(PKGS)
 
 .PHONY: build
-build:
+build: $(SETUP)
 	@go build $(PKGS)
-
-.PHONY: depensure
-depensure:
-	@dep ensure
-
-.PHONY: depupdate
-depupdate:
-	@dep ensure -update
 
 .PHONY: buildrelease
 buildrelease:
@@ -78,3 +62,20 @@ buildrelease:
 	@for os in $(ALL_OS); do \
 		GOOS=$$os GOARCH=amd64 go build -ldflags="-X main.version=$(VERSION)" -o release/yamldiff-v$(VERSION)-$$os-amd64 || exit 1; \
 	done
+
+$(GOIMPORTS):
+	@go get -u golang.org/x/tools/cmd/goimports
+
+$(GOMETALINTER):
+	@go get -u github.com/alecthomas/gometalinter
+	@gometalinter --install
+
+$(DEP):
+	@go get -u github.com/golang/dep/cmd/dep
+
+$(TOOLS): $(GOIMPORTS) $(GOMETALINTER) $(DEP)
+
+$(VENDOR): $(DEP)
+	@dep ensure
+
+$(SETUP): $(TOOLS) $(VENDOR)
