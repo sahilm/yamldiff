@@ -6,6 +6,11 @@ PKGS := $(shell go list ./... | grep -v /vendor)
 test: setup
 	@go test $(PKGS)
 
+SOURCES = $(shell find . -name '*.go' -not -path './vendor/*')
+.PHONY: goimports
+goimports: setup
+	@goimports -w $(SOURCES)
+
 .PHONY: lint
 lint: setup
 	@gometalinter ./... --enable=goimports --enable=gosimple \
@@ -66,6 +71,9 @@ $(VENDOR): $(DEP)
 	@dep ensure
 
 setup: tools $(VENDOR)
+
+updatedeps:
+	@dep ensure -update
 
 BINARY := yamldiff
 VERSION ?= latest
