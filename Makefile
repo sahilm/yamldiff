@@ -56,7 +56,7 @@ $(GOIMPORTS):
 
 $(GOMETALINTER):
 	@go get -u github.com/alecthomas/gometalinter
-	@gometalinter --install
+	@gometalinter --install &> /dev/null
 
 $(DEP):
 	@go get -u github.com/golang/dep/cmd/dep
