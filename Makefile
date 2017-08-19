@@ -14,7 +14,7 @@ goimports: setup
 .PHONY: lint
 lint: setup
 	gometalinter ./... --enable=goimports --enable=gosimple \
-	--enable=unparam --enable=unused --vendor -t
+	--enable=unparam --enable=unused --disable=gotype --vendor -t
 
 .PHONY: check
 check: setup
@@ -60,7 +60,6 @@ $(GOIMPORTS):
 $(GOMETALINTER):
 	go get -u github.com/alecthomas/gometalinter
 	gometalinter --install &> /dev/null
-	gometalinter --disable-all --vendor -t
 
 $(DEP):
 	go get -u github.com/golang/dep/cmd/dep
