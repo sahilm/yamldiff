@@ -53,7 +53,6 @@ BIN_DIR := $(GOPATH)/bin
 GOIMPORTS := $(BIN_DIR)/goimports
 GOMETALINTER := $(BIN_DIR)/gometalinter
 DEP := $(BIN_DIR)/dep
-VENDOR := $(CURDIR)/vendor
 
 $(GOIMPORTS):
 	@go get -u golang.org/x/tools/cmd/goimports
@@ -67,10 +66,10 @@ $(DEP):
 
 tools: $(GOIMPORTS) $(GOMETALINTER) $(DEP)
 
-$(VENDOR): $(DEP)
+vendor: $(DEP)
 	@dep ensure
 
-setup: tools $(VENDOR)
+setup: tools vendor
 
 updatedeps:
 	@dep ensure -update
