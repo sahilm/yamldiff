@@ -1,6 +1,6 @@
 language: go
 go:
-  - 1.8
+  - 1.9
 script:
   - make ci
 before_deploy:
