@@ -18,8 +18,7 @@ lint: setup
 
 .PHONY: check
 check: setup
-	gometalinter ./... --disable-all --enable=vet --enable=vetshadow \
-	--enable=errcheck --enable=goimports --vendor -t
+	gometalinter ./... --disable-all --enable=vet --enable=vetshadow --enable=goimports --vendor -t
 
 COVERAGE := $(CURDIR)/coverage
 COVER_PROFILE :=$(COVERAGE)/cover.out
