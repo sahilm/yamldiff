@@ -85,7 +85,7 @@ arch = $(word 2, $(temp))
 .PHONY: $(PLATFORMS)
 $(PLATFORMS): setup
 	mkdir -p $(CURDIR)/release
-	GOOS=$(os) GOARCH=$(arch) go build -ldflags="-X main.version=$(VERSION)" \
+	CGO_ENABLED=0 GOOS=$(os) GOARCH=$(arch) go build -ldflags="-X main.version=$(VERSION)" \
 	-o release/$(BINARY)-v$(VERSION)-$(os)-$(arch)
 
 .PHONY: release
