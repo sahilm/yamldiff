@@ -11,8 +11,8 @@
   name = "github.com/logrusorgru/aurora"
 
 [[constraint]]
-  branch = "v2"
-  name = "gopkg.in/yaml.v2"
+  branch = "devel"
+  name = "github.com/go-yaml/yaml"
 
 [[constraint]]
   version = "v0.0.2"

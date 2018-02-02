@@ -2,16 +2,16 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 
 	"strings"
 
+	"github.com/go-yaml/yaml"
 	"github.com/jessevdk/go-flags"
 	"github.com/kylelemons/godebug/pretty"
 	"github.com/logrusorgru/aurora"
 	"github.com/mattn/go-isatty"
-	"gopkg.in/yaml.v2"
 )
 
 var version = "latest"
@@ -51,7 +51,7 @@ func main() {
 		failOnErr(formatter, err)
 	}
 
-	diff := computeDiff(formatter, yaml1, yaml2)
+	diff := computeDiffs(formatter, yaml1, yaml2)
 	if diff != "" {
 		fmt.Println(diff)
 	}
@@ -68,15 +68,22 @@ func stat(filenames ...string) []error {
 	return errs
 }
 
-func unmarshal(filename string) (interface{}, error) {
-	contents, err := ioutil.ReadFile(filename)
+func unmarshal(filename string) ([]interface{}, error) {
+	f, err := os.Open(filename)
 	if err != nil {
 		return nil, err
 	}
-	var ret interface{}
-	err = yaml.Unmarshal(contents, &ret)
-	if err != nil {
-		return nil, err
+	d := yaml.NewDecoder(f)
+	var ret []interface{}
+	for {
+		var r interface{}
+		err = d.Decode(&r)
+		if err == io.EOF {
+			break
+		} else if err != nil {
+			return nil, err
+		}
+		ret = append(ret, r)
 	}
 	return ret, nil
 }
@@ -93,10 +100,28 @@ func failOnErr(formatter aurora.Aurora, errs ...error) {
 	os.Exit(1)
 }
 
+func computeDiffs(formatter aurora.Aurora, a []interface{}, b []interface{}) string {
+	diffs := make([]string, 0)
+	if len(a) > len(b) {
+		//extend - https://github.com/golang/go/wiki/SliceTricks
+		b = append(b, make([]interface{}, len(a)-len(b))...)
+	} else if len(b) > len(a) {
+		a = append(a, make([]interface{}, len(b)-len(a))...)
+	}
+
+	for i := range a {
+		diffs = append(diffs, computeDiff(formatter, a[i], b[i]), "---")
+	}
+	return strings.Join(diffs, "\n")
+}
+
 func computeDiff(formatter aurora.Aurora, a interface{}, b interface{}) string {
 	diffs := make([]string, 0)
 	for _, s := range strings.Split(pretty.Compare(a, b), "\n") {
 		switch {
+		//hack
+		case (s == "+nil" || s == "-nil"):
+			//drop this
 		case strings.HasPrefix(s, "+"):
 			diffs = append(diffs, formatter.Bold(formatter.Green(s)).String())
 		case strings.HasPrefix(s, "-"):
