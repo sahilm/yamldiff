@@ -60,6 +60,9 @@ func main() {
 func stat(filenames ...string) []error {
 	var errs []error
 	for _, filename := range filenames {
+		if filename == "-" {
+			continue
+		}
 		_, err := os.Stat(filename)
 		if err != nil {
 			errs = append(errs, fmt.Errorf("cannot find file: %v. Does it exist?", filename))
@@ -69,7 +72,13 @@ func stat(filenames ...string) []error {
 }
 
 func unmarshal(filename string) (interface{}, error) {
-	contents, err := ioutil.ReadFile(filename)
+	var contents []byte
+	var err error
+	if filename == "-" {
+		contents, err = ioutil.ReadAll(os.Stdin)
+	} else {
+		contents, err = ioutil.ReadFile(filename)
+	}
 	if err != nil {
 		return nil, err
 	}
