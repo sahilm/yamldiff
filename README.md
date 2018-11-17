@@ -26,7 +26,7 @@ Thanks to all the contributors of the above libraries.
 
 `yamldiff --file1 /path/to/yamlfile1.yml --file2 /path/to/yamlfile2.yml`. The output is colorized by default. Colors
 can be suppressed by the `--no-color` flag. Colors will automatically be suppressed if `stdout` is not a `tty`, for example
-when piping/redirecting the output of `yamldiff`.
+when piping/redirecting the output of `yamldiff`. Supplying `-` as a file argument will read the file from `stdin`.
 
 ## Contributing
 
