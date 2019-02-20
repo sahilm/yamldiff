@@ -41,7 +41,7 @@ func goInstall(t *testing.T) {
 
 func runYamldiff(t *testing.T) []byte {
 	var out bytes.Buffer
-	yamldiff := exec.Command("yamldiff", "--file1=testdata/1.yml", "--file2=testdata/2.yml")
+	yamldiff := exec.Command("yamldiff", "testdata/1.yml", "testdata/2.yml")
 	yamldiff.Stdout = &out
 
 	err := yamldiff.Start()

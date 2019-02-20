@@ -18,8 +18,6 @@ var version = "latest"
 
 func main() {
 	var opts struct {
-		File1   string `long:"file1" description:"first YAML file" required:"true"`
-		File2   string `long:"file2" description:"second YAML file" required:"true"`
 		NoColor bool   `long:"no-color" description:"disable colored output" required:"false"`
 		Version func() `long:"version" description:"print version and exit"`
 	}
@@ -29,7 +27,7 @@ func main() {
 		os.Exit(0)
 	}
 
-	_, err := flags.Parse(&opts)
+	files, err := flags.Parse(&opts)
 	if err != nil {
 		if err.(*flags.Error).Type == flags.ErrHelp {
 			os.Exit(0)
@@ -37,16 +35,26 @@ func main() {
 		os.Exit(1)
 	}
 
+	if len(files) < 2 {
+		fmt.Fprintln(os.Stderr, "Two filenames must be supplied for comparison")
+		os.Exit(1)
+	} else if len(files) > 2 {
+		fmt.Fprintln(os.Stderr, "Too many command line options, yamldiff can only compare two files")
+		os.Exit(1)
+	}
+
 	formatter := newFormatter(opts.NoColor)
 
-	errors := stat(opts.File1, opts.File2)
+	file1 := files[0]
+	file2 := files[1]
+	errors := stat(file1, file2)
 	failOnErr(formatter, errors...)
 
-	yaml1, err := unmarshal(opts.File1)
+	yaml1, err := unmarshal(file1)
 	if err != nil {
 		failOnErr(formatter, err)
 	}
-	yaml2, err := unmarshal(opts.File2)
+	yaml2, err := unmarshal(file2)
 	if err != nil {
 		failOnErr(formatter, err)
 	}
