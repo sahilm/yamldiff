@@ -118,13 +118,12 @@ func failOnErr(formatter aurora.Aurora, errs ...error) {
 
 func computeDiff(formatter aurora.Aurora, a interface{}, b interface{}) string {
 	diffs := make([]string, 0)
-	for i, s := range strings.Split(pretty.Compare(a, b), "\n") {
-		pos := formatter.Gray(6, fmt.Sprintf("%03d.", i))
+	for _, s := range strings.Split(pretty.Compare(a, b), "\n") {
 		switch {
 		case strings.HasPrefix(s, "+"):
-			diffs = append(diffs, fmt.Sprintf("%s %s", pos, formatter.Bold(formatter.Green(s)).String()))
+			diffs = append(diffs, formatter.Bold(formatter.Green(s)).String())
 		case strings.HasPrefix(s, "-"):
-			diffs = append(diffs, fmt.Sprintf("%s %s", pos, formatter.Bold(formatter.Red(s)).String()))
+			diffs = append(diffs, formatter.Bold(formatter.Red(s)).String())
 		}
 	}
 	return strings.Join(diffs, "\n")
