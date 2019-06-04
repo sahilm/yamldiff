@@ -1,9 +1,11 @@
 package main
 
 import (
+	"bytes"
 	"errors"
 	"flag"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"os"
 
@@ -76,9 +78,12 @@ func stat(filenames ...string) []error {
 	return errs
 }
 
-func unmarshal(filename string) (interface{}, error) {
-	var contents []byte
-	var err error
+func unmarshal(filename string) ([]interface{}, error) {
+	var (
+		contents []byte
+		err      error
+		values   []interface{}
+	)
 	if filename == "-" {
 		contents, err = ioutil.ReadAll(os.Stdin)
 	} else {
@@ -87,12 +92,16 @@ func unmarshal(filename string) (interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
-	var ret interface{}
-	err = yaml.Unmarshal(contents, &ret)
-	if err != nil {
-		return nil, err
+	dec := yaml.NewDecoder(bytes.NewReader(contents))
+	for {
+		var value interface{}
+		err := dec.Decode(&value)
+		if err == io.EOF {
+			break
+		}
+		values = append(values, value)
 	}
-	return ret, nil
+	return values, nil
 }
 
 func failOnErr(formatter aurora.Aurora, errs ...error) {
@@ -109,12 +118,13 @@ func failOnErr(formatter aurora.Aurora, errs ...error) {
 
 func computeDiff(formatter aurora.Aurora, a interface{}, b interface{}) string {
 	diffs := make([]string, 0)
-	for _, s := range strings.Split(pretty.Compare(a, b), "\n") {
+	for i, s := range strings.Split(pretty.Compare(a, b), "\n") {
+		pos := formatter.Gray(fmt.Sprintf("%03d", i))
 		switch {
 		case strings.HasPrefix(s, "+"):
-			diffs = append(diffs, formatter.Bold(formatter.Green(s)).String())
+			diffs = append(diffs, fmt.Sprintf("%s. %s", pos, formatter.Bold(formatter.Green(s)).String()))
 		case strings.HasPrefix(s, "-"):
-			diffs = append(diffs, formatter.Bold(formatter.Red(s)).String())
+			diffs = append(diffs, fmt.Sprintf("%s. %s", pos, formatter.Bold(formatter.Red(s)).String()))
 		}
 	}
 	return strings.Join(diffs, "\n")
