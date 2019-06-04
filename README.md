@@ -24,6 +24,7 @@ Thanks to all the contributors of the above libraries.
 ## Usage
 
 ```shell
+yamldiff /path/to/*.yml
 yamldiff /path/to/yamlfile1.yml /path/to/yamlfile2.yml
 cat /path/to/yamlfile2.yml | yamldiff /path/to/yamlfile1.yml -
 cat /path/to/yamlfile1.yml | yamldiff - /path/to/yamlfile2.yml
