@@ -2,3 +2,6 @@
 something:
   - is: 2
   - hello: world
+---
+kek:
+  - kek: false

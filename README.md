@@ -10,7 +10,6 @@ Nothing fancy about the code, all the heavy liftin' is done by:
 * [godebug](https://github.com/kylelemons/godebug/) - for diffin'
 * [aurora](https://github.com/logrusorgru/aurora) - for fancy printin'
 * [go-isatty](https://github.com/mattn/go-isatty) - for tty detectin'
-* [go-flags](https://github.com/jessevdk/go-flags) - for flaggin'
 * [The Go stdlib](https://golang.org/pkg/) - for everythin'
 
 Thanks to all the contributors of the above libraries.
@@ -24,9 +23,14 @@ Thanks to all the contributors of the above libraries.
 
 ## Usage
 
-`yamldiff --file1 /path/to/yamlfile1.yml --file2 /path/to/yamlfile2.yml`. The output is colorized by default. Colors
-can be suppressed by the `--no-color` flag. Colors will automatically be suppressed if `stdout` is not a `tty`, for example
-when piping/redirecting the output of `yamldiff`.
+```shell
+yamldiff /path/to/*.yml
+yamldiff /path/to/yamlfile1.yml /path/to/yamlfile2.yml
+cat /path/to/yamlfile2.yml | yamldiff /path/to/yamlfile1.yml -
+cat /path/to/yamlfile1.yml | yamldiff - /path/to/yamlfile2.yml
+```
+
+The output is colorized by default. Colors can be suppressed by the `--no-color` flag. Colors will automatically be suppressed if `stdout` is not a `tty`, for example when piping/redirecting the output of `yamldiff`.
 
 ## Contributing
 
