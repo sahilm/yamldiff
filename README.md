@@ -23,9 +23,13 @@ Thanks to all the contributors of the above libraries.
 
 ## Usage
 
-`yamldiff /path/to/yamlfile1.yml /path/to/yamlfile2.yml`. The output is colorized by default. Colors
-can be suppressed by the `--no-color` flag. Colors will automatically be suppressed if `stdout` is not a `tty`, for example
-when piping/redirecting the output of `yamldiff`.
+```shell
+yamldiff /path/to/yamlfile1.yml /path/to/yamlfile2.yml
+cat /path/to/yamlfile2.yml | yamldiff /path/to/yamlfile1.yml -
+cat /path/to/yamlfile1.yml | yamldiff - /path/to/yamlfile2.yml
+```
+
+The output is colorized by default. Colors can be suppressed by the `--no-color` flag. Colors will automatically be suppressed if `stdout` is not a `tty`, for example when piping/redirecting the output of `yamldiff`.
 
 ## Contributing
 
