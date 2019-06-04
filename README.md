@@ -10,7 +10,6 @@ Nothing fancy about the code, all the heavy liftin' is done by:
 * [godebug](https://github.com/kylelemons/godebug/) - for diffin'
 * [aurora](https://github.com/logrusorgru/aurora) - for fancy printin'
 * [go-isatty](https://github.com/mattn/go-isatty) - for tty detectin'
-* [go-flags](https://github.com/jessevdk/go-flags) - for flaggin'
 * [The Go stdlib](https://golang.org/pkg/) - for everythin'
 
 Thanks to all the contributors of the above libraries.
