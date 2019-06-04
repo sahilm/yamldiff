@@ -1,52 +1,57 @@
 package main
 
 import (
+	"errors"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"os"
 
 	"strings"
 
-	"github.com/jessevdk/go-flags"
 	"github.com/kylelemons/godebug/pretty"
 	"github.com/logrusorgru/aurora"
 	"github.com/mattn/go-isatty"
 	"gopkg.in/yaml.v2"
 )
 
-var version = "latest"
+var (
+	version = "latest"
+
+	noColorFlag = flag.Bool("no-color", false, "Disable colored output")
+	versionFlag = flag.Bool("version", false, "Prints version and exit")
+)
 
 func main() {
-	var opts struct {
-		File1   string `long:"file1" description:"first YAML file" required:"true"`
-		File2   string `long:"file2" description:"second YAML file" required:"true"`
-		NoColor bool   `long:"no-color" description:"disable colored output" required:"false"`
-		Version func() `long:"version" description:"print version and exit"`
+	var (
+		file1 string
+		file2 string
+	)
+
+	flag.Parse()
+
+	if *versionFlag {
+		fmt.Println(version)
+		return
 	}
 
-	opts.Version = func() {
-		fmt.Fprintf(os.Stderr, "%v\n", version)
-		os.Exit(0)
+	formatter := newFormatter(*noColorFlag)
+
+	args := flag.Args()
+	if len(args) < 2 {
+		failOnErr(formatter, errors.New("Files must be specified"))
 	}
+	file1 = args[0]
+	file2 = args[1]
 
-	_, err := flags.Parse(&opts)
-	if err != nil {
-		if err.(*flags.Error).Type == flags.ErrHelp {
-			os.Exit(0)
-		}
-		os.Exit(1)
-	}
-
-	formatter := newFormatter(opts.NoColor)
-
-	errors := stat(opts.File1, opts.File2)
+	errors := stat(file1, file2)
 	failOnErr(formatter, errors...)
 
-	yaml1, err := unmarshal(opts.File1)
+	yaml1, err := unmarshal(file1)
 	if err != nil {
 		failOnErr(formatter, err)
 	}
-	yaml2, err := unmarshal(opts.File2)
+	yaml2, err := unmarshal(file2)
 	if err != nil {
 		failOnErr(formatter, err)
 	}
