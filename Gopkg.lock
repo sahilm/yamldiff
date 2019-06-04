@@ -2,44 +2,56 @@
 
 
 [[projects]]
-  name = "github.com/jessevdk/go-flags"
-  packages = ["."]
-  revision = "96dc06278ce32a0e9d957d590bb987c81ee66407"
-  version = "v1.3.0"
-
-[[projects]]
-  branch = "master"
+  digest = "1:ae993d6dfbc5e2012fed2ab44d5a35ff28772583b68759454a327c069de318ec"
   name = "github.com/kylelemons/godebug"
-  packages = ["diff","pretty"]
-  revision = "a616ab194758ae0a11290d87ca46ee8c440117b0"
+  packages = [
+    "diff",
+    "pretty",
+  ]
+  pruneopts = "UT"
+  revision = "9ff306d4fbead574800b66369df5b6144732d58e"
+  version = "v1.1.0"
 
 [[projects]]
-  branch = "master"
+  digest = "1:ba852707958e39694e7f64328008287892adf9b1aed0174480e2f50e0c23e521"
   name = "github.com/logrusorgru/aurora"
   packages = ["."]
-  revision = "962a6974312dde57d1f6f5738b4f83e1af9f38a4"
+  pruneopts = "UT"
+  revision = "21d75270181e0436fee7bd58b991c212cf309068"
+  version = "v2.0"
 
 [[projects]]
+  digest = "1:9b90c7639a41697f3d4ad12d7d67dfacc9a7a4a6e0bbfae4fc72d0da57c28871"
   name = "github.com/mattn/go-isatty"
   packages = ["."]
-  revision = "fc9e8d8ef48496124e79ae0df75490096eccf6fe"
-  version = "v0.0.2"
+  pruneopts = "UT"
+  revision = "1311e847b0cb909da63b5fecfb5370aa66236465"
+  version = "v0.0.8"
 
 [[projects]]
   branch = "master"
+  digest = "1:8f5108406bc43c7669b0d67d282e40d05c9f268615fcaf8c1f0f76965aa3f09f"
   name = "golang.org/x/sys"
   packages = ["unix"]
-  revision = "e42485b6e20ae7d2304ec72e535b103ed350cc02"
+  pruneopts = "UT"
+  revision = "4c4f7f33c9ed00de01c4c741d2177abfcfe19307"
 
 [[projects]]
-  branch = "v2"
+  digest = "1:4d2e5a73dc1500038e504a8d78b986630e3626dc027bc030ba5c75da257cdb96"
   name = "gopkg.in/yaml.v2"
   packages = ["."]
-  revision = "eb3733d160e74a9c7e442f435eb3bea458e1d19f"
+  pruneopts = "UT"
+  revision = "51d6538a90f86fe93ac480b35f37b2be17fef232"
+  version = "v2.2.2"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "79125d185da82fe3858e0f8b9e8c4ce4e1011c4937801f8fa838faec37c0d2df"
+  input-imports = [
+    "github.com/kylelemons/godebug/pretty",
+    "github.com/logrusorgru/aurora",
+    "github.com/mattn/go-isatty",
+    "gopkg.in/yaml.v2",
+  ]
   solver-name = "gps-cdcl"
   solver-version = 1
