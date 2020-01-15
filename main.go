@@ -54,7 +54,7 @@ func main() {
 	diff := computeDiff(formatter, yaml1, yaml2)
 	if diff != "" {
 		fmt.Println(diff)
-        os.Exit(1)
+		os.Exit(1)
 	}
 }
 
