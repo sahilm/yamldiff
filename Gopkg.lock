@@ -2,44 +2,65 @@
 
 
 [[projects]]
+  digest = "1:550e69376be9a028e7a039090d635e949134873c651a74a95a8896552db372b8"
   name = "github.com/jessevdk/go-flags"
   packages = ["."]
+  pruneopts = ""
   revision = "96dc06278ce32a0e9d957d590bb987c81ee66407"
   version = "v1.3.0"
 
 [[projects]]
   branch = "master"
+  digest = "1:a8f11e9df1134f1eba70ef5fc8bf3ea5e17b7013479453bfad9ba8707d0b8e4a"
   name = "github.com/kylelemons/godebug"
-  packages = ["diff","pretty"]
+  packages = [
+    "diff",
+    "pretty",
+  ]
+  pruneopts = ""
   revision = "a616ab194758ae0a11290d87ca46ee8c440117b0"
 
 [[projects]]
   branch = "master"
+  digest = "1:19bcf8f11c06582953db6e23567377571989af1eb9b3c58dd8a9a23e9342c665"
   name = "github.com/logrusorgru/aurora"
   packages = ["."]
+  pruneopts = ""
   revision = "962a6974312dde57d1f6f5738b4f83e1af9f38a4"
 
 [[projects]]
+  digest = "1:420bb8eabfa6dff0cb5c8e786489a420e7e9d93a8b1d83882cce70c5a5b9bc3e"
   name = "github.com/mattn/go-isatty"
   packages = ["."]
+  pruneopts = ""
   revision = "fc9e8d8ef48496124e79ae0df75490096eccf6fe"
   version = "v0.0.2"
 
 [[projects]]
   branch = "master"
+  digest = "1:590053260f0642c48e3699048188a940ecfb4eb7ef3620ffaa836538e04029be"
   name = "golang.org/x/sys"
   packages = ["unix"]
+  pruneopts = ""
   revision = "e42485b6e20ae7d2304ec72e535b103ed350cc02"
 
 [[projects]]
   branch = "v2"
+  digest = "1:81314a486195626940617e43740b4fa073f265b0715c9f54ce2027fee1cb5f61"
   name = "gopkg.in/yaml.v2"
   packages = ["."]
+  pruneopts = ""
   revision = "eb3733d160e74a9c7e442f435eb3bea458e1d19f"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "79125d185da82fe3858e0f8b9e8c4ce4e1011c4937801f8fa838faec37c0d2df"
+  input-imports = [
+    "github.com/jessevdk/go-flags",
+    "github.com/kylelemons/godebug/pretty",
+    "github.com/logrusorgru/aurora",
+    "github.com/mattn/go-isatty",
+    "gopkg.in/yaml.v2",
+  ]
   solver-name = "gps-cdcl"
   solver-version = 1
