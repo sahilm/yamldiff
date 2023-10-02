@@ -7,7 +7,7 @@ A CLI tool to diff two YAML/JSON files.
 Nothing fancy about the code, all the heavy liftin' is done by:
 
 * [go-yaml](https://github.com/go-yaml/yaml/) - for YAML parsin'
-* [godebug](https://github.com/kylelemons/godebug/) - for diffin'
+* [r3labs/diff](github.com/r3labs/diff/v3) - for diffin'
 * [aurora](https://github.com/logrusorgru/aurora) - for fancy printin'
 * [go-isatty](https://github.com/mattn/go-isatty) - for tty detectin'
 * [go-flags](https://github.com/jessevdk/go-flags) - for flaggin'
@@ -39,7 +39,7 @@ when piping/redirecting the output of `yamldiff`.
 
 The MIT License (MIT)
 
-Copyright (c) 2017 Sahil Muthoo
+Copyright (c) 2023 Sahil Muthoo
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
