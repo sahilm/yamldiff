@@ -5,12 +5,13 @@ import (
 	"io/ioutil"
 	"os"
 
+	"github.com/r3labs/diff/v3"
+
 	"strings"
 
 	"github.com/jessevdk/go-flags"
 	"github.com/logrusorgru/aurora"
 	"github.com/mattn/go-isatty"
-	"github.com/r3labs/diff"
 	"gopkg.in/yaml.v2"
 )
 
@@ -113,7 +114,7 @@ func computeDiff(formatter aurora.Aurora, a interface{}, b interface{}) string {
 		return err.Error()
 	}
 	for _, s := range changelog {
-		pathStr := formatter.Brown(strings.Join(s.Path, ","))
+		pathStr := formatter.Brown(strings.Join(s.Path, "."))
 		fromStr := formatter.Red(fmt.Sprintf("- %v", s.From))
 		toStr := formatter.Green(fmt.Sprintf("+ %v", s.To))
 		chunk := fmt.Sprintf("%s:\n%s\n%s\n", pathStr, fromStr, toStr)
