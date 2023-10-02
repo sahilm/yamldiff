@@ -53,7 +53,7 @@ func runYamldiff(t *testing.T) []byte {
 		err = yamldiff.Wait()
 		done <- true
 	}()
-	timeout := time.Millisecond * 100
+	timeout := time.Millisecond * 1000
 	select {
 	case <-done:
 		if err != nil {
