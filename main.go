@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 	"sort"
 	"strings"
@@ -60,10 +60,9 @@ func main() {
 		failOnErr(formatter, err)
 	}
 
-	diff := computeDiff(formatter, yaml1, yaml2)
-	if diff != "" {
-		fmt.Println(diff)
-		os.Exit(1)
+	computedDiff := computeDiff(formatter, yaml1, yaml2)
+	if computedDiff != "" {
+		fmt.Println(computedDiff)
 	}
 }
 
@@ -75,7 +74,7 @@ func stat(filenames ...string) []error {
 		}
 		_, err := os.Stat(filename)
 		if err != nil {
-			errs = append(errs, fmt.Errorf("cannot find file: %v. Does it exist?", filename))
+			errs = append(errs, fmt.Errorf("cannot find file: %v. Does it exist", filename))
 		}
 	}
 	return errs
@@ -85,9 +84,9 @@ func unmarshal(filename string) (interface{}, error) {
 	var contents []byte
 	var err error
 	if filename == "-" {
-		contents, err = ioutil.ReadAll(os.Stdin)
+		contents, err = io.ReadAll(os.Stdin)
 	} else {
-		contents, err = ioutil.ReadFile(filename)
+		contents, err = os.ReadFile(filename)
 	}
 	if err != nil {
 		return nil, err
@@ -123,7 +122,7 @@ func computeDiff(formatter aurora.Aurora, a interface{}, b interface{}) string {
 		return err.Error()
 	}
 	for _, s := range changelog {
-		pathStr := formatter.Brown(strings.Join(s.Path, "."))
+		pathStr := formatter.Yellow(strings.Join(s.Path, "."))
 		fromStr := formatter.Red(fmt.Sprintf("- %v", s.From))
 		toStr := formatter.Green(fmt.Sprintf("+ %v", s.To))
 		chunk := fmt.Sprintf("%s:\n%s\n%s\n", pathStr, fromStr, toStr)
