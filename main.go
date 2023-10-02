@@ -126,7 +126,7 @@ func computeDiff(formatter aurora.Aurora, a interface{}, b interface{}) string {
 		fromStr := formatter.Red(fmt.Sprintf("- %v", s.From))
 		toStr := formatter.Green(fmt.Sprintf("+ %v", s.To))
 		chunk := fmt.Sprintf("%s:\n%s\n%s\n", pathStr, fromStr, toStr)
-		diffs = insert(diffs, chunk)
+		diffs = appendSorted(diffs, chunk)
 	}
 	return strings.Join(diffs, "\n")
 }
@@ -153,7 +153,7 @@ func isTerminal() bool {
 	}
 }
 
-func insert(ss []string, s string) []string {
+func appendSorted(ss []string, s string) []string {
 	i := sort.SearchStrings(ss, s)
 	ss = append(ss, "")
 	copy(ss[i+1:], ss[i:])
