@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"sort"
+	"strings"
 
 	"github.com/r3labs/diff/v3"
-
-	"strings"
 
 	"github.com/jessevdk/go-flags"
 	"github.com/logrusorgru/aurora"
@@ -118,9 +118,8 @@ func computeDiff(formatter aurora.Aurora, a interface{}, b interface{}) string {
 		fromStr := formatter.Red(fmt.Sprintf("- %v", s.From))
 		toStr := formatter.Green(fmt.Sprintf("+ %v", s.To))
 		chunk := fmt.Sprintf("%s:\n%s\n%s\n", pathStr, fromStr, toStr)
-		diffs = append(diffs, chunk)
+		diffs = insert(diffs, chunk)
 	}
-
 	return strings.Join(diffs, "\n")
 }
 
@@ -144,4 +143,12 @@ func isTerminal() bool {
 	default:
 		return false
 	}
+}
+
+func insert(ss []string, s string) []string {
+	i := sort.SearchStrings(ss, s)
+	ss = append(ss, "")
+	copy(ss[i+1:], ss[i:])
+	ss[i] = s
+	return ss
 }
