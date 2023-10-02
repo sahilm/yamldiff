@@ -3,7 +3,7 @@ package main_test
 import (
 	"bytes"
 	"flag"
-	"io/ioutil"
+	"os"
 	"os/exec"
 	"testing"
 	"time"
@@ -15,12 +15,12 @@ func TestYamlDiff(t *testing.T) {
 	goInstall(t)
 	goldenfile := "testdata/diff.golden"
 	if *update {
-		err := ioutil.WriteFile(goldenfile, runYamldiff(t), 0644)
+		err := os.WriteFile(goldenfile, runYamldiff(t), 0644)
 		if err != nil {
 			t.Fatal(err)
 		}
 	}
-	contents, err := ioutil.ReadFile(goldenfile)
+	contents, err := os.ReadFile(goldenfile)
 	want := string(contents)
 	if err != nil {
 		t.Fatal(err)
