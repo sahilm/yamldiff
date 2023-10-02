@@ -122,7 +122,7 @@ func computeDiff(formatter aurora.Aurora, a interface{}, b interface{}) string {
 		return err.Error()
 	}
 	for _, s := range changelog {
-		pathStr := formatter.Yellow(strings.Join(s.Path, "."))
+		pathStr := strings.Join(s.Path, ".")
 		fromStr := formatter.Red(fmt.Sprintf("- %v", s.From))
 		toStr := formatter.Green(fmt.Sprintf("+ %v", s.To))
 		chunk := fmt.Sprintf("%s:\n%s\n%s\n", pathStr, fromStr, toStr)
