@@ -4,11 +4,12 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-
+	"sort"
 	"strings"
 
+	"github.com/r3labs/diff/v3"
+
 	"github.com/jessevdk/go-flags"
-	"github.com/kylelemons/godebug/pretty"
 	"github.com/logrusorgru/aurora"
 	"github.com/mattn/go-isatty"
 	"gopkg.in/yaml.v2"
@@ -104,13 +105,20 @@ func failOnErr(formatter aurora.Aurora, errs ...error) {
 
 func computeDiff(formatter aurora.Aurora, a interface{}, b interface{}) string {
 	diffs := make([]string, 0)
-	for _, s := range strings.Split(pretty.Compare(a, b), "\n") {
-		switch {
-		case strings.HasPrefix(s, "+"):
-			diffs = append(diffs, formatter.Bold(formatter.Green(s)).String())
-		case strings.HasPrefix(s, "-"):
-			diffs = append(diffs, formatter.Bold(formatter.Red(s)).String())
-		}
+	differ, err := diff.NewDiffer(diff.AllowTypeMismatch(true))
+	if err != nil {
+		return err.Error()
+	}
+	changelog, err := differ.Diff(a, b)
+	if err != nil {
+		return err.Error()
+	}
+	for _, s := range changelog {
+		pathStr := formatter.Brown(strings.Join(s.Path, "."))
+		fromStr := formatter.Red(fmt.Sprintf("- %v", s.From))
+		toStr := formatter.Green(fmt.Sprintf("+ %v", s.To))
+		chunk := fmt.Sprintf("%s:\n%s\n%s\n", pathStr, fromStr, toStr)
+		diffs = insert(diffs, chunk)
 	}
 	return strings.Join(diffs, "\n")
 }
@@ -135,4 +143,12 @@ func isTerminal() bool {
 	default:
 		return false
 	}
+}
+
+func insert(ss []string, s string) []string {
+	i := sort.SearchStrings(ss, s)
+	ss = append(ss, "")
+	copy(ss[i+1:], ss[i:])
+	ss[i] = s
+	return ss
 }
