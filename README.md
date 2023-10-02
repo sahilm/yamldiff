@@ -1,5 +1,4 @@
 # yamldiff
-[![darwin/linux build status](https://travis-ci.org/sahilm/yamldiff.svg?branch=master)](https://travis-ci.org/sahilm/yamldiff)
 [![Go Report Card](https://goreportcard.com/badge/github.com/sahilm/yamldiff?cache=bust)](https://goreportcard.com/report/github.com/sahilm/yamldiff)
 
 A CLI tool to diff two YAML/JSON files.
