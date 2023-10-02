@@ -13,12 +13,7 @@ goimports: setup
 
 .PHONY: lint
 lint: setup
-	gometalinter ./... --enable=goimports --enable=gosimple \
-	--enable=unparam --enable=unused --disable=gotype --vendor -t
-
-.PHONY: check
-check: setup
-	gometalinter ./... --disable-all --enable=vet --enable=vetshadow --enable=goimports --vendor -t
+	golangci-lint run
 
 COVERAGE := $(CURDIR)/coverage
 COVER_PROFILE :=$(COVERAGE)/cover.out
@@ -38,7 +33,7 @@ cover: setup
 	go tool cover -html=$(COVER_PROFILE) -o $(COVERAGE)/index.html
 
 .PHONY: ci
-ci: setup check test
+ci: setup lint test
 
 .PHONY: install
 install: setup
@@ -50,28 +45,17 @@ build: setup
 
 BIN_DIR := $(GOPATH)/bin
 GOIMPORTS := $(BIN_DIR)/goimports
-GOMETALINTER := $(BIN_DIR)/gometalinter
-DEP := $(BIN_DIR)/dep
+GOLANG_CI_LINT := $(BIN_DIR)/golangci-lint
 
 $(GOIMPORTS):
 	go get -u golang.org/x/tools/cmd/goimports
 
-$(GOMETALINTER):
-	go get -u github.com/alecthomas/gometalinter
-	gometalinter --install &> /dev/null
+$(GOLANG_CI_LINT):
+	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(BIN_DIR) v1.54.2
 
-$(DEP):
-	go get -u github.com/golang/dep/cmd/dep
+tools: $(GOIMPORTS) $(GOLANG_CI_LINT)
 
-tools: $(GOIMPORTS) $(GOMETALINTER) $(DEP)
-
-vendor: $(DEP)
-	dep ensure
-
-setup: tools vendor
-
-updatedeps:
-	dep ensure -update
+setup: tools
 
 BINARY := yamldiff
 VERSION ?= latest
