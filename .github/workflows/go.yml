@@ -26,10 +26,10 @@ jobs:
 
     - name: build_release
       run: make VERSION=${GITHUB_REF_NAME} release -j3
-      if: startsWith(github.ref, 'refs/tags/')
+      if: github.ref_type == 'tag'
 
     - name: publish
       uses: softprops/action-gh-release@v1
-      if: startsWith(github.ref, 'refs/tags/')
+      if: github.ref_type == 'tag'
       with:
         files: 'release/*'
