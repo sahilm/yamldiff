@@ -25,4 +25,4 @@ jobs:
       run: make ci
 
     - name: build_release
-      run: make VERSION=${$GITHUB_REF_NAME} release -j3
+      run: make VERSION=${GITHUB_REF_NAME} release -j3
