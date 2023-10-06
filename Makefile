@@ -13,7 +13,7 @@ goimports: setup
 
 .PHONY: lint
 lint: setup
-	golangci-lint run
+	$(BIN_DIR)/golangci-lint run
 
 COVERAGE := $(CURDIR)/coverage
 COVER_PROFILE :=$(COVERAGE)/cover.out
@@ -43,6 +43,7 @@ install: setup
 build: setup
 	go build $(PKGS)
 
+GOPATH ?= $(HOME)/go
 BIN_DIR := $(GOPATH)/bin
 GOIMPORTS := $(BIN_DIR)/goimports
 GOLANG_CI_LINT := $(BIN_DIR)/golangci-lint

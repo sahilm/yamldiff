@@ -32,7 +32,7 @@ func TestYamlDiff(t *testing.T) {
 }
 
 func goInstall(t *testing.T) {
-	install := exec.Command("go", "install")
+	install := exec.Command("go", "build")
 	err := install.Run()
 	if err != nil {
 		t.Fatal(err)
@@ -41,7 +41,7 @@ func goInstall(t *testing.T) {
 
 func runYamldiff(t *testing.T) []byte {
 	var out bytes.Buffer
-	yamldiff := exec.Command("yamldiff", "testdata/1.yml", "testdata/2.yml")
+	yamldiff := exec.Command("./yamldiff", "testdata/1.yml", "testdata/2.yml")
 	yamldiff.Stdout = &out
 
 	err := yamldiff.Start()
