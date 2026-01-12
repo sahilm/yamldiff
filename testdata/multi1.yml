@@ -1,0 +1,70 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: default
+  labels:
+    app: myapp
+    environment: production
+data:
+  database_host: db.example.com
+  database_port: 5432
+  cache_enabled: true
+  max_connections: 100
+  features:
+    - name: feature-a
+      enabled: true
+      config:
+        timeout: 30
+        retries: 3
+    - name: feature-b
+      enabled: false
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp
+  namespace: default
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: myapp
+  template:
+    metadata:
+      labels:
+        app: myapp
+        version: v1.0.0
+    spec:
+      containers:
+        - name: main
+          image: myapp:1.0.0
+          ports:
+            - containerPort: 8080
+          resources:
+            limits:
+              cpu: 500m
+              memory: 256Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+          env:
+            - name: LOG_LEVEL
+              value: info
+            - name: DEBUG
+              value: "false"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp-service
+  namespace: default
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 8080
+      protocol: TCP
+  selector:
+    app: myapp

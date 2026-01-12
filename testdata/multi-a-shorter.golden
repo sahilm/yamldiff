@@ -1,0 +1,30 @@
+items.0.status:
+- active
++ inactive
+
+value:
+- 100
++ 200
+
+---
+config:
+- <nil>
++ map[timeout:30]
+
+enabled:
+- <nil>
++ true
+
+name:
+- <nil>
++ second-doc
+
+---
+count:
+- <nil>
++ 42
+
+name:
+- <nil>
++ third-doc
+

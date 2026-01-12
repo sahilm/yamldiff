@@ -1,0 +1,83 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: production
+  labels:
+    app: myapp
+    environment: production
+    tier: backend
+data:
+  database_host: db-prod.example.com
+  database_port: 5432
+  cache_enabled: true
+  max_connections: 250
+  features:
+    - name: feature-a
+      enabled: true
+      config:
+        timeout: 60
+        retries: 5
+    - name: feature-b
+      enabled: true
+    - name: feature-c
+      enabled: true
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp
+  namespace: production
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: myapp
+  template:
+    metadata:
+      labels:
+        app: myapp
+        version: v2.0.0
+    spec:
+      containers:
+        - name: main
+          image: myapp:2.0.0
+          ports:
+            - containerPort: 8080
+            - containerPort: 9090
+          resources:
+            limits:
+              cpu: "1"
+              memory: 512Mi
+            requests:
+              cpu: 200m
+              memory: 256Mi
+          env:
+            - name: LOG_LEVEL
+              value: warn
+            - name: DEBUG
+              value: "false"
+            - name: METRICS_ENABLED
+              value: "true"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp-service
+  namespace: production
+  annotations:
+    prometheus.io/scrape: "true"
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 8080
+      protocol: TCP
+      name: http
+    - port: 443
+      targetPort: 8443
+      protocol: TCP
+      name: https
+  selector:
+    app: myapp

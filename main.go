@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"io"
 	"os"
@@ -12,7 +13,7 @@ import (
 	"github.com/jessevdk/go-flags"
 	"github.com/logrusorgru/aurora"
 	"github.com/mattn/go-isatty"
-	"gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v3"
 )
 
 var version = "latest"
@@ -80,7 +81,7 @@ func stat(filenames ...string) []error {
 	return errs
 }
 
-func unmarshal(filename string) (interface{}, error) {
+func unmarshal(filename string) ([]interface{}, error) {
 	var contents []byte
 	var err error
 	if filename == "-" {
@@ -91,12 +92,21 @@ func unmarshal(filename string) (interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
-	var ret interface{}
-	err = yaml.Unmarshal(contents, &ret)
-	if err != nil {
-		return nil, err
+
+	var docs []interface{}
+	decoder := yaml.NewDecoder(bytes.NewReader(contents))
+	for {
+		var doc interface{}
+		err := decoder.Decode(&doc)
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			return nil, err
+		}
+		docs = append(docs, doc)
 	}
-	return ret, nil
+	return docs, nil
 }
 
 func failOnErr(formatter aurora.Aurora, errs ...error) {
@@ -111,24 +121,41 @@ func failOnErr(formatter aurora.Aurora, errs ...error) {
 	os.Exit(1)
 }
 
-func computeDiff(formatter aurora.Aurora, a interface{}, b interface{}) string {
-	diffs := make([]string, 0)
-	differ, err := diff.NewDiffer(diff.AllowTypeMismatch(true))
-	if err != nil {
-		return err.Error()
+func computeDiff(formatter aurora.Aurora, a []interface{}, b []interface{}) string {
+	var docResults []string
+
+	maxDocs := max(len(a), len(b))
+	for i := 0; i < maxDocs; i++ {
+		var docA, docB interface{}
+		if i < len(a) {
+			docA = a[i]
+		}
+		if i < len(b) {
+			docB = b[i]
+		}
+
+		differ, err := diff.NewDiffer(diff.AllowTypeMismatch(true))
+		if err != nil {
+			return err.Error()
+		}
+		changelog, err := differ.Diff(docA, docB)
+		if err != nil {
+			return err.Error()
+		}
+
+		diffs := make([]string, 0)
+		for _, s := range changelog {
+			pathStr := strings.Join(s.Path, ".")
+			fromStr := formatter.Red(fmt.Sprintf("- %v", s.From))
+			toStr := formatter.Green(fmt.Sprintf("+ %v", s.To))
+			chunk := fmt.Sprintf("%s:\n%s\n%s\n", pathStr, fromStr, toStr)
+			diffs = appendSorted(diffs, chunk)
+		}
+		if len(diffs) > 0 {
+			docResults = append(docResults, strings.Join(diffs, "\n"))
+		}
 	}
-	changelog, err := differ.Diff(a, b)
-	if err != nil {
-		return err.Error()
-	}
-	for _, s := range changelog {
-		pathStr := strings.Join(s.Path, ".")
-		fromStr := formatter.Red(fmt.Sprintf("- %v", s.From))
-		toStr := formatter.Green(fmt.Sprintf("+ %v", s.To))
-		chunk := fmt.Sprintf("%s:\n%s\n%s\n", pathStr, fromStr, toStr)
-		diffs = appendSorted(diffs, chunk)
-	}
-	return strings.Join(diffs, "\n")
+	return strings.Join(docResults, "\n---\n")
 }
 
 func newFormatter(noColor bool) aurora.Aurora {

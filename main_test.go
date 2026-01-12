@@ -13,21 +13,57 @@ var update = flag.Bool("update", false, "update .golden files")
 
 func TestYamlDiff(t *testing.T) {
 	goInstall(t)
-	goldenfile := "testdata/diff.golden"
-	if *update {
-		err := os.WriteFile(goldenfile, runYamldiff(t), 0644)
-		if err != nil {
-			t.Fatal(err)
-		}
+
+	tests := []struct {
+		name       string
+		file1      string
+		file2      string
+		goldenFile string
+	}{
+		{
+			name:       "single-doc",
+			file1:      "testdata/1.yml",
+			file2:      "testdata/2.yml",
+			goldenFile: "testdata/diff.golden",
+		},
+		{
+			name:       "multi-doc",
+			file1:      "testdata/multi1.yml",
+			file2:      "testdata/multi2.yml",
+			goldenFile: "testdata/multi-diff.golden",
+		},
+		{
+			name:       "multi-doc-a-shorter",
+			file1:      "testdata/multi-short.yml",
+			file2:      "testdata/multi-long.yml",
+			goldenFile: "testdata/multi-a-shorter.golden",
+		},
+		{
+			name:       "multi-doc-b-shorter",
+			file1:      "testdata/multi-long.yml",
+			file2:      "testdata/multi-short.yml",
+			goldenFile: "testdata/multi-b-shorter.golden",
+		},
 	}
-	contents, err := os.ReadFile(goldenfile)
-	want := string(contents)
-	if err != nil {
-		t.Fatal(err)
-	}
-	got := string(runYamldiff(t))
-	if got != want {
-		t.Errorf("got: %v want: %v", got, want)
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if *update {
+				err := os.WriteFile(tt.goldenFile, runYamldiff(t, tt.file1, tt.file2), 0644)
+				if err != nil {
+					t.Fatal(err)
+				}
+			}
+			contents, err := os.ReadFile(tt.goldenFile)
+			if err != nil {
+				t.Fatal(err)
+			}
+			want := string(contents)
+			got := string(runYamldiff(t, tt.file1, tt.file2))
+			if got != want {
+				t.Errorf("got:\n%v\nwant:\n%v", got, want)
+			}
+		})
 	}
 }
 
@@ -39,9 +75,9 @@ func goInstall(t *testing.T) {
 	}
 }
 
-func runYamldiff(t *testing.T) []byte {
+func runYamldiff(t *testing.T, file1, file2 string) []byte {
 	var out bytes.Buffer
-	yamldiff := exec.Command("./yamldiff", "testdata/1.yml", "testdata/2.yml")
+	yamldiff := exec.Command("./yamldiff", file1, file2)
 	yamldiff.Stdout = &out
 
 	err := yamldiff.Start()

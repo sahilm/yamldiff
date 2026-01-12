@@ -1,7 +1,7 @@
 # yamldiff
 [![Go Report Card](https://goreportcard.com/badge/github.com/sahilm/yamldiff?cache=bust)](https://goreportcard.com/report/github.com/sahilm/yamldiff)
 
-A CLI tool to diff two YAML/JSON files.
+A CLI tool to diff two YAML/JSON files. Supports multi-document YAML files (documents separated by `---`).
 
 Nothing fancy about the code, all the heavy liftin' is done by:
 

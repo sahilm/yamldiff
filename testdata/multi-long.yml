@@ -1,0 +1,14 @@
+---
+name: first-doc
+value: 200
+items:
+  - id: 1
+    status: inactive
+---
+name: second-doc
+enabled: true
+config:
+  timeout: 30
+---
+name: third-doc
+count: 42

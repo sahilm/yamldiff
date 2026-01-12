@@ -1,0 +1,98 @@
+data.database_host:
+- db.example.com
++ db-prod.example.com
+
+data.features.0.config.retries:
+- 3
++ 5
+
+data.features.0.config.timeout:
+- 30
++ 60
+
+data.features.1.enabled:
+- false
++ true
+
+data.features.2:
+- <nil>
++ map[enabled:true name:feature-c]
+
+data.max_connections:
+- 100
++ 250
+
+metadata.labels.tier:
+- <nil>
++ backend
+
+metadata.namespace:
+- default
++ production
+
+---
+metadata.namespace:
+- default
++ production
+
+spec.replicas:
+- 3
++ 5
+
+spec.template.metadata.labels.version:
+- v1.0.0
++ v2.0.0
+
+spec.template.spec.containers.0.env.0.value:
+- info
++ warn
+
+spec.template.spec.containers.0.env.2:
+- <nil>
++ map[name:METRICS_ENABLED value:true]
+
+spec.template.spec.containers.0.image:
+- myapp:1.0.0
++ myapp:2.0.0
+
+spec.template.spec.containers.0.ports.1:
+- <nil>
++ map[containerPort:9090]
+
+spec.template.spec.containers.0.resources.limits.cpu:
+- 500m
++ 1
+
+spec.template.spec.containers.0.resources.limits.memory:
+- 256Mi
++ 512Mi
+
+spec.template.spec.containers.0.resources.requests.cpu:
+- 100m
++ 200m
+
+spec.template.spec.containers.0.resources.requests.memory:
+- 128Mi
++ 256Mi
+
+---
+metadata.annotations:
+- <nil>
++ map[prometheus.io/scrape:true]
+
+metadata.namespace:
+- default
++ production
+
+spec.ports.0.name:
+- <nil>
++ http
+
+spec.ports.1:
+- <nil>
++ map[name:https port:443 protocol:TCP targetPort:8443]
+
+spec.type:
+- ClusterIP
++ LoadBalancer
+
