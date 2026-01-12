@@ -52,7 +52,7 @@ $(GOIMPORTS):
 	go get -u golang.org/x/tools/cmd/goimports
 
 $(GOLANG_CI_LINT):
-	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(BIN_DIR) v1.54.2
+	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(BIN_DIR) v2.8.0
 
 tools: $(GOIMPORTS) $(GOLANG_CI_LINT)
 
